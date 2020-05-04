@@ -8,9 +8,9 @@ namespace CORE_BookStore.Controllers
 {
     public class HomeController : Controller
     {
-        public String Index()
+        public ViewResult Index()
         {
-            return "BookStore";
+            return View();
         }
     }
 }
