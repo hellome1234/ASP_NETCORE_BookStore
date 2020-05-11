@@ -1,15 +1,29 @@
-﻿
-@{
-    Layout = null;
-}
+﻿@* to import the model *@
+@using CORE_BookStore.Models;
 
-<!DOCTYPE html>
+<div class="container">
+    <h3 class="display-3">All Books</h3>
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            <div class="col-md-4">
+                <div class="card m-md-4 shadow-sm" style="width: 18rem;">
+                    <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg">Thumbnail</svg>
+                    <div class="card-body">
+                        <h3 class="card-title">@book.BookName</h3>
+                        <p class="card-text">@book.Discription</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a href="~/Book/GetBook/@book.BookID" class="btn btn-sm btn-outline-secondary">Details</a>
+                            </div>
+                            <small class="text-muted">@book.AurtherName</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>GetAllBook</title>
-</head>
-<body>
-</body>
-</html>
+</div>
+
+

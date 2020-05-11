@@ -21,14 +21,14 @@ namespace CORE_BookStore.Controllers
             return View();
         }
         //get book by id
-        public BookModels GetBook(int id )
+        public ViewResult GetBook(int id )
         {
-            return bookRepository.GetByID(id);
+            return View(bookRepository.GetByID(id));
         }
         //get book list
-        public List<BookModels> GetAllBook()
+        public ViewResult GetAllBook()
         {
-            return bookRepository.GetBookList();
+            return View(bookRepository.GetBookList());
         }
         //search book
         public List<BookModels> SearchBooks(String bookName, String aurtherName)
