@@ -1,5 +1,4 @@
-﻿@* to import the model *@
-@using CORE_BookStore.Models;
+﻿
 
 <div class="container">
     <h3 class="display-3">All Books</h3>
@@ -8,15 +7,17 @@
         {
             <div class="col-md-4">
                 <div class="card m-md-4 shadow-sm" style="width: 18rem;">
-                    <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg">Thumbnail</svg>
+                    <img src="@book.BookCoverPhoto"  class="img-thumbnail"/>
                     <div class="card-body">
                         <h3 class="card-title">@book.BookName</h3>
                         <p class="card-text">@book.Discription</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <a href="~/Book/GetBook/@book.BookID" class="btn btn-sm btn-outline-secondary">Details</a>
+                                @* asp route is used if we use routinga and give name to the aciton *@
+                                <a asp-route="GetBook" asp-route-id="@book.BookID" class="btn btn-sm btn-outline-secondary">Details</a>
                             </div>
-                            <small class="text-muted">@book.AurtherName</small>
+                            @* the writter google page can be dynamic using google api *@
+                            <small class="text-muted"><a asp-protocol="http" asp-host="/www.google.com/search?gs_ssp=eJzj4tDP1TcwNjc3MmD0EkxPzS9KT1UoAsLcxKKSzDwAc4MItQ&q=george+r+r+martin&rlz=1C1CHWL_enNP859NP859&oq=gerge+r+r+&aqs=chrome.1.69i57j46j0l2j46j0l2.4069j0j7&sourceid=chrome&ie=UTF-8">@book.AurtherName</a></small>
                         </div>
                     </div>
                 </div>
