@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CORE_BookStore.Components;
 using CORE_BookStore.Data;
 using CORE_BookStore.Repository;
 using Microsoft.AspNetCore.Builder;
@@ -26,7 +27,7 @@ namespace CORE_BookStore
             services.AddDbContext<BookStoreContext>(options =>options.UseSqlServer(@"Server=DESKTOP-A72R8Q6\SQLEXPRESS;Database=SajaBooks;Integrated Security=True"));
 
             //add MVC templates to the project
-            services.AddControllersWithViews();
+            services.AddControllersWithViews();     
             //add razor page compilation during runtime
 #if DEBUG
             services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -37,7 +38,6 @@ namespace CORE_BookStore
             services.AddScoped<BookRepository, BookRepository>();
             services.AddScoped<LanguageRepository, LanguageRepository>();
 
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,13 +47,17 @@ namespace CORE_BookStore
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //enables routing
             app.UseRouting();
+
             //to support static file we need a middleware
             app.UseStaticFiles(); //support wwwroot file
-         
+
+            //also to enable routing 
+            app.UseEndpoints(endpoints => endpoints.MapControllerRoute( name:"Default" , pattern: "{Controller=Book}/{Action=GetAllBook}/{id?}"));
             
-            
-            app.UseEndpoints(endpoint =>  endpoint.MapDefaultControllerRoute());
+            //app.UseEndpoints(endpoint =>  endpoint.MapDefaultControllerRoute());
         }
     }
 }

@@ -16,9 +16,7 @@ namespace CORE_BookStore.Data
         public int LanguageID { get; set; }
         public Language Language { get; set; }
         public string BookCoverPhoto { get; set; }
-
         public ICollection<BookGallery> bookGallery { get; set; }
-
         public string BookURL { get; set; }
 
     }

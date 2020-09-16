@@ -1,14 +1,10 @@
-﻿<div class="container">
-    <h3 class="display-3">All Books</h3>
+﻿@model IEnumerable<BookModels>
+
     <div class="row">
         @foreach (var book in Model)
         {
             <div class="col-md-4">
-            <partial name="_BookCard" model="book" />
+                <partial name="_BookCard" model="book" />
             </div>
         }
     </div>
-
-</div>
-
-

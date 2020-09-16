@@ -20,7 +20,7 @@ namespace CORE_BookStore.Repository
         //...................................Book Manipulated methods....................................................//
 
             //save book
-            public async Task<long> AddNewBook(BookModels model)
+         public async Task<long> AddNewBook(BookModels model)
         {
             Book newbook = new Book()
             {
@@ -49,8 +49,6 @@ namespace CORE_BookStore.Repository
             await db.SaveChangesAsync();
             return (int)newbook.BookID;
         }
-
-
 
         //...................................Book access Methods........................................................//
         //ReturnBook by Id
@@ -128,6 +126,29 @@ namespace CORE_BookStore.Repository
             return BookList;
 
         }
-    
+        
+        public async Task<List<BookModels>> GetTopBooksAsync(int count)
+        {
+            List<Book> bookEntities = await db.Books.Take(count).ToListAsync();
+            List<BookModels> bookModels = new List<BookModels>();
+            if (bookEntities?.Any() == true)
+            {
+                foreach (var book in bookEntities)
+                {
+                    bookModels.Add(new BookModels()
+                    {
+                        BookID = book.BookID,
+                        AurtherName = book.AurtherName,
+                        BookName = book.BookName,
+                        Discription = book.Discription,
+                        Genre = book.Genre,
+                        LanguageID = book.LanguageID,
+                        TotalPage = book.TotalPage,
+                        BookCoverPhoto = book.BookCoverPhoto
+                    });
+                }
+            }
+            return bookModels;
+        }
     }
 }

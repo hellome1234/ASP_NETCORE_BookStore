@@ -40,7 +40,7 @@ namespace CORE_BookStore.Controllers
         //..............................................Book Access View.......................................//
        
         //get book by id
-        [Route("Book-Detail/{id}",Name ="GetBook")]
+        [Route("Book-Details/{id}",Name ="GetBook")]
         public async Task<ViewResult> GetBook(long id )
         {            
             Title = "Book Details";

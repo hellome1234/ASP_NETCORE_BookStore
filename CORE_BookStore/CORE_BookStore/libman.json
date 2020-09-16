@@ -25,6 +25,10 @@
     {
       "library": "jquery-ajax-unobtrusive@3.2.6",
       "destination": "wwwroot/jquery-ajax-unobtrusive/"
+    },
+    {
+      "library": "pdf.js@2.6.347",
+      "destination": "wwwroot/lib/pdf.js/"
     }
   ]
 }

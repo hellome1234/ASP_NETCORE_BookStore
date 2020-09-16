@@ -16,11 +16,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Images\Books\CoverPhoto\" />
     <Folder Include="wwwroot\Images\Books\GalleryPhoto\" />
     <Folder Include="wwwroot\Js\" />
     <Folder Include="wwwroot\BookPDF\" />

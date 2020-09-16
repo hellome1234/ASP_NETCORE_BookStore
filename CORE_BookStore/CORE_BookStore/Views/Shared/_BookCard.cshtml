@@ -1,0 +1,16 @@
+﻿@model CORE_BookStore.Models.BookModels;
+<div class="card m-md-4 shadow-sm" style="width: 18rem;">
+    <img src="@(string.IsNullOrEmpty(Model.BookCoverPhoto) ? "/Images/Books/CoverPhoto/noimage.png": Model.BookCoverPhoto )" class="img-thumbnail" />
+    <div class="card-body">
+        <h3 class="card-title">@(string.IsNullOrEmpty(Model.BookName)?"Not Available":Model.BookName)</h3>
+        <p class="card-text">@(string.IsNullOrEmpty(Model.Discription)? "Not Available" : Model.Discription)</p>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+                @* asp route is used if we use routinga and give name to the aciton *@
+                <a asp-route="GetBook" asp-route-id="@Model.BookID" class="btn btn-sm btn-outline-secondary">Details</a>
+            </div>
+            @* the writter google page can be dynamic using google api *@
+            <small class="text-muted"><a asp-protocol="http" asp-host="/www.google.com/search?gs_ssp=eJzj4tDP1TcwNjc3MmD0EkxPzS9KT1UoAsLcxKKSzDwAc4MItQ&q=george+r+r+martin&rlz=1C1CHWL_enNP859NP859&oq=gerge+r+r+&aqs=chrome.1.69i57j46j0l2j46j0l2.4069j0j7&sourceid=chrome&ie=UTF-8">@(string.IsNullOrEmpty(Model.AurtherName) ? "Not Available" : Model.AurtherName)</a></small>
+        </div>
+    </div>
+</div>
