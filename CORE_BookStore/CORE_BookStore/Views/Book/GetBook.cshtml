@@ -57,7 +57,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <a class="btn btn-outline-primary" href="@Model.BookURL ">
+                    <a class="btn btn-outline-primary" asp-controller="Book" asp-action="PdfViewer" asp-route-bookId="@Model.BookID">
                         Read Now
                     </a>
                 </div>

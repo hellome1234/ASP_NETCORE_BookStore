@@ -1,0 +1,187 @@
+﻿@model BookModels
+
+@{ 
+    Layout = null;
+    ViewBag.title = "Pdf Reader";
+}
+
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>@ViewBag.title</title>
+       
+        <environment include="Development">
+            <link href="~/lib/twitter-bootstrap/css/bootstrap.css" rel="stylesheet" />
+            <script src="~/lib/pdf.js/pdf.min.js"></script>
+            <script src="~/lib/pdf.js/pdf.worker.js"></script>
+        </environment>
+        <environment exclude="Development">
+            @* library cdn link  *@
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+                  asp-fallback-href="~/lib/twitter-bootstrap/css/bootstrap.min.css"
+                  asp-fallback-test-class="sr-only"
+                  asp-fallback-test-property="position"
+                  asp-fallback-test-value="absolute"
+                  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+            <link href="~/css/Site.css" rel="stylesheet" />
+            <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
+            <script src="~/lib/pdf.js/pdf.worker.min.js"></script>
+        </environment>
+    </head>
+    <body>
+        <div>
+            <button id="prev">Previous</button>
+            <button id="next">Next</button>
+            &nbsp; &nbsp;
+            <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+        </div>
+
+        <canvas id="pdf_canvas"></canvas>
+
+        <environment include="Development">
+            <script src="~/lib/jquery/jquery.js"></script>
+            <script src="~/jquery-validate/jquery.validate.js"></script>
+            <script src="~/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+            <script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+            <script src="~/lib/twitter-bootstrap/js/bootstrap.js"></script>
+        </environment>
+        <environment exclude="Development">
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+            <script src="~/jquery-validate/jquery.validate.min.js"></script>
+            <script src="~/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+            <script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        </environment>
+        <script>
+            var url = '@Model.BookURL';
+            var pdfDoc = null,
+                pageNum = 1,
+                pageRendering = false,
+                pageNumPending = null,
+                scale = 0.8,
+                canvas = document.getElementById('pdf_canvas'),
+                ctx = canvas.getContext('2d');
+            /**
+            * Get page info from document, resize canvas accordingly, and render page.
+            * param num Page number.
+            */
+            function renderPage(num) {
+                pageRendering = true;
+                // Using promise to fetch the page
+                pdfDoc.getPage(num).then(function (page) {
+                    var viewport = page.getViewport({ scale: scale });
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    // Render PDF page into canvas context
+                    var renderContext = {
+                        canvasContext: ctx,
+                        viewport: viewport
+                    };
+                    var renderTask = page.render(renderContext);
+
+                    // Wait for rendering to finish
+                    renderTask.promise.then(function () {
+                        pageRendering = false;
+                        if (pageNumPending !== null) {
+                            // New page rendering is pending
+                            renderPage(pageNumPending);
+                            pageNumPending = null;
+                        }
+                    });
+                });
+
+                // Update page counters
+                document.getElementById('page_num').textContent = num;
+            }
+
+            /**
+             * If another page rendering in progress, waits until the rendering is
+            * finised. Otherwise, executes rendering immediately.
+            */
+            function queueRenderPage(num) {
+                if (pageRendering) {
+                    pageNumPending = num;
+                } else {
+                    renderPage(num);
+                }
+            }
+
+
+            /**
+             * Displays previous page.
+            */
+            function onPrevPage() {
+                if (pageNum <= 1) {
+                    return;
+                }
+                pageNum--;
+                queueRenderPage(pageNum);
+            }
+            document.getElementById('prev').addEventListener('click', onPrevPage);
+
+            /**
+             * Displays next page.
+             */
+            function onNextPage() {
+                if (pageNum >= pdfDoc.numPages) {
+                    return;
+                }
+                pageNum++;
+                queueRenderPage(pageNum);
+            }
+            document.getElementById('next').addEventListener('click', onNextPage);
+
+
+
+            /**
+            * Asynchronously downloads PDF.
+             */
+            pdfjsLib.getDocument(url).promise.then(function (pdfDoc_) {
+                pdfDoc = pdfDoc_;
+                document.getElementById('page_count').textContent = pdfDoc.numPages;
+
+                // Initial/first page rendering
+                renderPage(pageNum);
+            });
+
+
+
+
+        @*//get the document
+            var loadingTask = pdfjsLib.getDocument('@Model.BookURL');
+            loadingTask.promise.then(function (pdf) {
+                console.log("pages in the document" + pdf._pdfInfo.numPages);
+                pdf.getPage(1).then(function (page) {
+                    //now lets render the page
+                    var scale = 1;
+                    var viewport = page.getViewport({ scale: scale });
+                    var canvas = document.getElementById('pdf_canvas');
+                    var context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    var renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    var renderTask = page.render(renderContext);
+                    renderTask.promise.then(function () {
+                        console.log('Page rendered');
+                    });
+                });
+
+            }, function (reason) {
+                // PDF loading error
+                console.error(reason);
+            });*@
+
+        </script>
+    </body>
+
+    </html>
+
+
+   
+

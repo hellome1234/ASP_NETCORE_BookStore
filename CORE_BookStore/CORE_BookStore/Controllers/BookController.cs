@@ -153,5 +153,17 @@ namespace CORE_BookStore.Controllers
             await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
             return "/" + PhotoFile;
         }
+
+
+        
+        //Pdf Viewer
+       
+        public async Task<ViewResult> PdfViewer(int bookId)
+        {
+            BookModels book =await bookRepository.GetByID(bookId);
+            string filePath = Path.Combine(webHostEnvironment.WebRootPath, "BookPDF/97730ac9-f2a4-477f-a517-58508fec2bbf_Dsa.pdf");
+            ViewBag.filePath = filePath;
+            return View(book);
+        }
     }
 }
